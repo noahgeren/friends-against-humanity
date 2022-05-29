@@ -4,6 +4,7 @@
     import Answer from '../game-pages/answer.svelte';
     import Vote from '../game-pages/vote.svelte';
     import Lobby from '../game-pages/lobby.svelte';
+    import Rankings from '../game-pages/rankings.svelte';
 
     /**
     * @type {string | null}
@@ -15,5 +16,5 @@
 
 </script>
 <div class="flex justify-center">
-    <Lobby />
+    <Rankings />
 </div>

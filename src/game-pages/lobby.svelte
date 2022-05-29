@@ -17,9 +17,13 @@
             </div>
             <p></p>
             <div class="card-actions justify-center">
+                {#if players.length > 2}
                 <button class="btn btn-primary btn-lg text-white shadow-lg">
                     Start Game
                 </button>
+                {:else}
+                <p class="text-center">Waiting on more players to join</p>
+                {/if}
             </div>
         </div>
     </div>

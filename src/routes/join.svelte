@@ -1,4 +1,4 @@
-<div class="card max-w-sm h-card bg-gray-100 text-black mx-auto">
+<div class="card w-full max-w-sm h-card bg-gray-100 text-black mx-auto">
     <div class="card-body">
         <a href="/" class="card-title text-6xl">Friends<br/>Against<br/>Humanity</a>
         <input placeholder="Access Code" class="input input-lg input-bordered input-primary text-white w-full mt-3" />

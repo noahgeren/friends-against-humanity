@@ -2,19 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    body {
+        color: white;
+    }
+}
+
 @layer utilities {
     .h-card {
         min-height: 32rem;
     }
-    .btn-pop {
-        -webkit-animation: button-pop var(--animation-btn, 0.25s) ease-out;
-        animation: button-pop var(--animation-btn, 0.25s) ease-out;
-        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
-        transition-duration: 200ms;
-        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .btn-pop:active:hover, .btn-pop:active:focus {
-        animation: none;
-        transform: scale(var(--btn-focus-scale,.95));
+}
+
+@layer components {
+    .btn.btn-primary {
+        box-shadow: 0 0 0 2px #fff;
     }
 }

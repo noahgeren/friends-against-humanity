@@ -19,7 +19,7 @@
         box-shadow: 0 0 0 2px #fff;
     }
     .fah-card {
-        @apply card bg-gray-100 border border-gray-400 text-black shadow shadow-black;
+        @apply card bg-gray-100 border border-gray-400 text-black shadow shadow-black w-full max-w-sm h-card;
     }
     .fah-card.selected {
         @apply bg-primary text-white;

@@ -14,6 +14,6 @@
     });
 
 </script>
-<div class="flex justify-center">
+<div class="flex flex-col items-center">
     <SelectCard />
 </div>

@@ -6,11 +6,11 @@
         <h3 class="text-2xl">Access Code:</h3>
         <h1 class="text-8xl font-semibold">ABCDE</h1>
     </div>
-    <div class="card w-full h-card bg-gray-100 text-black mx-auto">
+    <div class="fah-card mx-auto">
         <div class="card-body">
             <h3 class="card-title text-5xl mb-3">Lobby</h3>
             <!-- <h4 class="text-2xl underline">Players</h4> -->
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-2 gap-3">
                 {#each players as player}
                 <p class="text-2xl">{player}</p>
                 {/each}

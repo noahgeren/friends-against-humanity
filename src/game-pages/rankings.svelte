@@ -5,15 +5,29 @@
             points: 5
         },
         {
+            nickname: 'Teeeest Thr33',
+            points: 3
+        },
+        {
             nickname: 'xTest Twox',
             points: 5
         },
-        {
-            nickname: 'Teeeest Thr33',
-            points: 3
-        }
     ];
 
+    
+    /**
+    * @type {any[]}
+    */
+    let rankings = [];
+    $: {
+        rankings = players.sort((a, b) => b.points - a.points);
+        for(let i = 0, place = 1; i < rankings.length; i++) {
+            if(i > 0 && rankings[i].points < rankings[i - 1].points) {
+                place++;
+            } 
+            rankings[i].place = getNumberWithOrdinal(place);
+        }
+    };
     /**
      * 
      * @param {number} n
@@ -28,9 +42,9 @@
     <div class="card-body">
         <h3 class="card-title text-5xl mb-3">Rankings</h3>
         <table class="text-xl">
-        {#each players as player, idx}
+        {#each rankings as player}
         <tr>
-            <td>{@html getNumberWithOrdinal(idx + 1)}</td>
+            <td>{@html player.place}</td>
             <td>{player.nickname}</td>
             <td>{player.points}</td>
         </tr>

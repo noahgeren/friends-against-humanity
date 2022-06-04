@@ -19,7 +19,7 @@
                 <div class="card-title text-4xl">{@html card}</div>
             </div>
         </div>
-        <div class="card-body pt-3 invisible pb-0" class:h-card={idx === whiteCards.length - 1}>
+        <div class="card-body pt-3 invisible pb-3" class:h-card={idx === whiteCards.length - 1}>
             <div class="card-title text-4xl">{@html card}</div>
         </div>
     </div>

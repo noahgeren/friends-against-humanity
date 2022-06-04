@@ -1,8 +1,7 @@
 <script>
     import { page } from '$app/stores';
     import { onMount } from 'svelte';
-    import Answer from '../game-pages/answer.svelte';
-    import Vote from '../game-pages/vote.svelte';
+    import SelectCard from '../game-pages/select-card.svelte';
     import Lobby from '../game-pages/lobby.svelte';
     import Rankings from '../game-pages/rankings.svelte';
 
@@ -16,5 +15,5 @@
 
 </script>
 <div class="flex justify-center">
-    <Rankings />
+    <SelectCard />
 </div>

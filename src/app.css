@@ -18,4 +18,16 @@
     .btn.btn-primary {
         box-shadow: 0 0 0 2px #fff;
     }
+    .fah-card {
+        @apply card bg-gray-100 border border-gray-400 text-black shadow shadow-black;
+    }
+    .fah-card.selected {
+        @apply bg-primary text-white;
+    }
+    .fah-card.selected:focus {
+        animation: button-pop .5s ease-out;
+        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
+        transition-duration: 200ms;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
 }

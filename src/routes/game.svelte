@@ -23,5 +23,5 @@
 
 </script>
 <div class="flex flex-col items-center">
-    <Loading />
+    <Rankings />
 </div>

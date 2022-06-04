@@ -13,4 +13,28 @@
             points: 3
         }
     ];
+
+    /**
+     * 
+     * @param {number} n
+     */
+    function getNumberWithOrdinal(n) {
+        let s = ["th", "st", "nd", "rd"],
+            v = n % 100;
+        return `${n}<sup>${s[(v - 20) % 10] || s[v] || s[0]}</sup>`;
+    }
 </script>
+<div class="fah-card mx-auto">
+    <div class="card-body">
+        <h3 class="card-title text-5xl mb-3">Rankings</h3>
+        <table class="text-xl">
+        {#each players as player, idx}
+        <tr>
+            <td>{@html getNumberWithOrdinal(idx + 1)}</td>
+            <td>{player.nickname}</td>
+            <td>{player.points}</td>
+        </tr>
+        {/each}
+        </table>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 <script>
     import { db } from "$lib/firebase";
     import { cards } from '$lib/cards'; 
-    import { ref, runTransaction, serverTimestamp } from "firebase/database";
+    import { ref, runTransaction } from "firebase/database";
 
     export let game, user;
 
@@ -12,10 +12,7 @@
                     ...data,
                     blackCard: cards.blackCards[Math.floor(Math.random() * cards.blackCards.length)],
                     czar: Object.keys(game.players)[0],
-                    state: {
-                        value: 'ANSWER',
-                        timestamp: serverTimestamp()
-                    }
+                    state: 'ANSWER'
                 }
             });
         } catch (e) {

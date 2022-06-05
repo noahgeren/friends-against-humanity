@@ -3,7 +3,7 @@
     import { goto } from "$app/navigation";
     import { auth, db } from "$lib/firebase";
     import { signInAnonymously } from "firebase/auth";
-    import { serverTimestamp, ref, set } from "firebase/database";
+    import { ref, set } from "firebase/database";
     import Loading from "../game-pages/loading.svelte";
     
     const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -19,10 +19,7 @@
         try {
             await set(ref(db, 'games/' + accessCode), {
                 admin: user.uid,
-                state: {
-                    value: 'LOBBY',
-                    timestamp: serverTimestamp()
-                }
+                state: 'LOBBY'
             });
             goto(`/game/?code=${accessCode}`);
         } catch (e) {

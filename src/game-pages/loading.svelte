@@ -4,7 +4,7 @@
 <div class="self-center justify-self-center text-center h-48 mt-16">
     <div class="ball"></div>
 </div>
-<h1 class="text-5xl font-semibold mt-3">{msg}</h1>
+<h1 class="text-5xl text-center font-semibold mt-3">{msg}</h1>
 <style>
     .ball {
         @apply block w-16 h-16 rounded-full bg-primary mt-16 mx-auto;

@@ -8,8 +8,3 @@
         </div>
     </div>
 </div>
-<style>
-    .input {
-        outline: 0 !important;
-    }
-</style>

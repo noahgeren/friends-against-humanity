@@ -10,26 +10,14 @@
     import Rankings from '../game-pages/rankings.svelte';
     import Loading from '../game-pages/loading.svelte';
 
-    /**
-    * @type {object | undefined}
-    */
-    let game;
-    
-    /**
-     * @type {object | undefined}
-     */
-    let user;
-
-    /**
-    * @type {string | null}
-    */
-    let code;
+    let code, user, game;
     onMount(async () => {
         code = $page.url.searchParams.get('code');
         if(!code) {
             goto('/');
             return;
         }
+        user = (await signInAnonymously(auth)).user;
         onValue(ref(db, 'games/' + code.toUpperCase()), (snapshot) => {
             if(!snapshot.exists()) {
                 window.location.href = '/';
@@ -40,7 +28,6 @@
                 accessCode: snapshot.key
             };
         });
-        user = await signInAnonymously(auth);
     });
 
 </script>
@@ -48,6 +35,6 @@
     {#if !game}
     <Loading />
     {:else}
-    <Lobby {game} />
+    <Lobby {game} {user} />
     {/if}
 </div>

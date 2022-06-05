@@ -14,10 +14,6 @@
         },
     ];
 
-    
-    /**
-    * @type {any[]}
-    */
     let rankings = [];
     $: {
         rankings = players.sort((a, b) => b.points - a.points);

@@ -1,8 +1,6 @@
 <script>
     let whiteCards = ["Seizing control of the means of production.","The new Radiohead album.","A moist towlette.","Walking into a glass door.","A nugget of poo roughly the size and shape of a crouton.","Adderall&trade;.","Getting killed and dragged up a tree by a leopard."];
-    /**
-     * @type {null | number}
-     */
+
     let selected = null;
 </script>
 <h1 class="text-5xl font-semibold block w-full max-w-md mx-3 mb-4">I went to the desert and ate of the peyote cactus. Turns out my spirit animal is _____.</h1>

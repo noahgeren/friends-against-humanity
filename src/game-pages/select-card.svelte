@@ -9,6 +9,7 @@
 
     $: isAdmin = user.uid === game.admin;
     $: isCzar = user.uid === game.czar;
+    // TODO: Change below to be all players but one have selected to account for czar
     $: isAnswer = game.state === 'ANSWER' && Object.values(game.players).some((player) => !player.selected);
     
 
@@ -59,6 +60,7 @@
             cards.splice(selected, 1);
             localStorage.setItem('cards', JSON.stringify(cards));
             submitted = true;
+            selected = undefined;
         } catch (e) {
             console.error(e);
             alert('Error submitting answer')
@@ -80,15 +82,10 @@
     <h1 class="text-5xl font-semibold block w-full max-w-md mx-3 mb-6 text-center">
         {@html game.blackCard.replace('_', '_____')}
     </h1>
-    {#if (isAdmin || isCzar) && isAnswer}
-        <h2 class="text-4xl font-semibold text-center my-3">
-            {#if isCzar}You are{:else}{game.players[game.czar].nickname} is{/if} the card czar this round
-        </h2>
-        <p class="text-center">Waiting on all players to answer</p>
-    {:else}
-        {#if !isAnswer && isCzar}
-        <h2 class="text-4xl font-semibold text-center my-3">Select the best card</h2>
-        {/if}
+    <h2 class="text-4xl font-semibold text-center my-3">
+        {#if isCzar}You are{:else}{game.players[game.czar].nickname} is{/if} the card czar this round
+    </h2>
+    {#if !((isAdmin || isCzar) && isAnswer)}
         <div
             class="flex flex-row flex-wrap gap-3 justify-center w-full"
             class:pointer-events-none={!isAnswer && !isCzar}

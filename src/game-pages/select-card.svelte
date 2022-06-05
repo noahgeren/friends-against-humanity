@@ -1,5 +1,11 @@
 <script>
+    import { onMount } from 'svelte';
+
     export let game, user;
+
+    onMount(() => {
+        // TODO: Draw white cards
+    });
 
     let whiteCards = ["Seizing control of the means of production.","The new Radiohead album.","A moist towlette.","Walking into a glass door.","A nugget of poo roughly the size and shape of a crouton.","Adderall&trade;.","Getting killed and dragged up a tree by a leopard."];
 

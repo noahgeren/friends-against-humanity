@@ -10,7 +10,7 @@
     $: isAdmin = user.uid === game.admin;
     $: isCzar = user.uid === game.czar;
     // TODO: Change below to be all players but one have selected to account for czar
-    $: isAnswer = game.state === 'ANSWER' && Object.values(game.players).some((player) => !player.selected);
+    $: isAnswer = game.state === 'ANSWER' && Object.entries(game.players).some(([uid, player]) => !player.selected && game.czar !== uid);
     
 
     let players = [];
@@ -40,7 +40,7 @@
             players = shuffle(Object.entries(game.players).map(([uid, player]) => ({
                 uid,
                 selected: player.selected
-            })));
+            })).filter((player) => game.czar !== player.uid));
             showingCards = players.map((player) => player.selected);
         }
     };

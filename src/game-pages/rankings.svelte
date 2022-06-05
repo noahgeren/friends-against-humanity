@@ -1,4 +1,7 @@
 <script>
+    import { db } from '$lib/firebase';
+    import { set, ref } from 'firebase/database';
+
     export let game, user;
     let rankings = [];
     $: {
@@ -26,7 +29,12 @@
     }
 
     async function next() {
-        // TODO
+        try {
+            await set(ref(db, `games/${game.accessCode}/state`), 'ANSWER');
+        } catch (e) {
+            console.error(e);
+            alert("Error going to next card");
+        }
     }
 </script>
 <h1 class="text-5xl text-center font-semibold">{game.winner.nickname} won!</h1>

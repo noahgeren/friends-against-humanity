@@ -1,5 +1,4 @@
 <script>
-    import { onMount } from 'svelte';
     import { cards } from '$lib/cards';
     import { db } from '$lib/firebase';
     import { ref, set, runTransaction } from 'firebase/database';
@@ -10,7 +9,6 @@
     $: isAdmin = user.uid === game.admin;
     $: isCzar = user.uid === game.czar;
     $: isAnswer = game.state === 'ANSWER' && Object.entries(game.players).some(([uid, player]) => !player.selected && game.czar !== uid);
-    
 
     let players = [];
     let showingCards = [];
@@ -91,6 +89,16 @@
             alert('Error submitting vote');
         }
     }
+
+    async function skip() {
+        try {
+            await set(ref(db, `game/${game.accessCode}/blackCard`),
+                cards.blackCards[Math.floor(Math.random() * cards.blackCards.length)]);
+        } catch(e) {
+            console.error(e);
+            alert("Error skipping black card");
+        }
+    }
 </script>
 {#if !submitted || !isAnswer}
     <h1 class="text-5xl font-semibold block w-full max-w-md mx-3 mb-6 text-center">
@@ -99,7 +107,11 @@
     <h2 class="text-4xl font-semibold text-center my-3">
         {#if isCzar}You are{:else}{game.players[game.czar].nickname} is{/if} the card czar this round
     </h2>
-    <!-- TODO: Add skip card button -->
+    {#if isAdmin && isAnswer}
+    <div class="text-center">
+        <button class="btn btn-primary btn-lg text-white" on:click={skip}>Skip Black Card</button>
+    </div>
+    {/if}
     {#if !((isAdmin || isCzar) && isAnswer)}
         <div
             class="flex flex-row flex-wrap gap-3 justify-center w-full"

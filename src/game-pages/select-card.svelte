@@ -1,13 +1,15 @@
 <script>
     import { onMount } from 'svelte';
     import { cards } from '$lib/cards';
+    import { db } from '$lib/firebase';
+    import { ref, set, runTransaction } from 'firebase/database';
     import Loading from './loading.svelte';
 
     export let game, user;
 
     $: isAdmin = user.uid === game.admin;
     $: isCzar = user.uid === game.czar;
-    $: isAnswer = game.state === 'ANSWER';
+    $: isAnswer = game.state === 'ANSWER' && Object.values(game.players).some((player) => !player.selected);
     
 
     let players = [];
@@ -52,7 +54,10 @@
 
     async function submitAnswer() {
         try {
-
+            await set(ref(db, `games/${game.accessCode}/players/${user.uid}/selected`), showingCards[selected]);
+            let cards = JSON.parse(localStorage.getItem('cards') || '[]');
+            cards.splice(selected, 1);
+            localStorage.setItem('cards', JSON.stringify(cards));
             submitted = true;
         } catch (e) {
             console.error(e);
@@ -61,18 +66,33 @@
     }
 
     async function submitVote() {
-
+        try {
+            await runTransaction(ref('games/' + game.accessCode), (oldData) => {
+                // TODO: Update winner, state, winner score, black card, czar, and selected cards
+            });
+        } catch (e) {
+            console.error(e);
+            alert('Error submitting vote');
+        }
     }
 </script>
-{#if !submitted}
-    <h1 class="text-5xl font-semibold block w-full max-w-md mx-3 mb-6">I went to the desert and ate of the peyote cactus. Turns out my spirit animal is _____.</h1>
+{#if !submitted || !isAnswer}
+    <h1 class="text-5xl font-semibold block w-full max-w-md mx-3 mb-6 text-center">
+        {@html game.blackCard.replace('_', '_____')}
+    </h1>
     {#if (isAdmin || isCzar) && isAnswer}
         <h2 class="text-4xl font-semibold text-center my-3">
             {#if isCzar}You are{:else}{game.players[game.czar].nickname} is{/if} the card czar this round
         </h2>
         <p class="text-center">Waiting on all players to answer</p>
     {:else}
-        <div class="flex flex-row flex-wrap gap-3 justify-center w-full">
+        {#if !isAnswer && isCzar}
+        <h2 class="text-4xl font-semibold text-center my-3">Select the best card</h2>
+        {/if}
+        <div
+            class="flex flex-row flex-wrap gap-3 justify-center w-full"
+            class:pointer-events-none={!isAnswer && !isCzar}
+        >
             {#each showingCards as card, idx}
             <div class="w-full max-w-sm relative">
                 <div
@@ -108,6 +128,6 @@
             </div>
         {/if}
     {/if}
-{:else if isAnswer}
-<Loading msg="Waiting on all players to answer" />
+{:else}
+    <Loading msg="Waiting on all players to answer" />
 {/if}

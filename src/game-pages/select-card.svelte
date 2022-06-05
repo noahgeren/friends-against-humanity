@@ -72,10 +72,7 @@
                 // Increment winner's points
                 data.players[players[selected].uid].points++;
                 // Select the winner
-                data.winner = {
-                    ...data.players[players[selected].uid],
-                    blackCard: data.blackCard
-                };
+                data.winner = data.players[players[selected].uid];
                 // Switch to rankings page
                 data.state = 'RANKINGS';
                 // Draw new black card

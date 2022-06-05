@@ -29,8 +29,8 @@
         // TODO
     }
 </script>
-<h1 class="text-4xl text-center font-semibold">Wafflemanox won!</h1>
-<h1 class="text-2xl w-full max-w-sm text-center mb-3">Slowly easing down onto a cucumber.</h1>
+<h1 class="text-5xl text-center font-semibold">{game.winner.nickname} won!</h1>
+<h1 class="text-3xl w-full max-w-md text-center mb-3">{@html game.winner.selected}</h1>
 <div class="fah-card mx-auto">
     <div class="card-body">
         <h3 class="text-5xl text-center font-semibold mb-3">Rankings</h3>

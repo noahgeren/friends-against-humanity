@@ -36,7 +36,7 @@
             </div>
             <p></p>
             <div class="card-actions justify-center">
-                {#if Object.keys(game.players).length > 2}
+                {#if Object.keys(game.players || {}).length > 2}
                     {#if user.uid === game.admin}
                     <button
                         class="btn btn-primary btn-lg text-white shadow-lg"

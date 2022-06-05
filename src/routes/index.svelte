@@ -29,6 +29,7 @@
                 return;
             }
             goto(`/game/?code=${accessCode}`);
+            return;
         }
 
         try {

@@ -39,6 +39,6 @@
     {:else if game.state === 'ANSWER'}
     <SelectCard {game} {user} />
     {:else if game.state === 'RANKINGS'}
-    <Rankings />
+    <Rankings {game} {user} />
     {/if}
 </div>

@@ -102,6 +102,7 @@
     <h2 class="text-4xl font-semibold text-center my-3">
         {#if isCzar}You are{:else}{game.players[game.czar].nickname} is{/if} the card czar this round
     </h2>
+    <!-- TODO: Add skip card button -->
     {#if !((isAdmin || isCzar) && isAnswer)}
         <div
             class="flex flex-row flex-wrap gap-3 justify-center w-full"

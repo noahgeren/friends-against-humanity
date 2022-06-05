@@ -37,9 +37,9 @@
     {:else if game.state.value === 'LOBBY'}
     <Lobby {game} {user} />
     {:else if game.state.value === 'ANSWER'}
-    <SelectCard />
+    <SelectCard {game} {user} />
     {:else if game.state.value === 'VOTE'}
-    <SelectCard />
+    <SelectCard {game} {user} />
     {:else if game.state.value === 'RANKINGS'}
     <Rankings />
     {/if}

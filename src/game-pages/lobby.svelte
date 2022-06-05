@@ -1,7 +1,28 @@
 <script>
+    import { db } from "$lib/firebase";
+    import { cards } from '$lib/cards'; 
+    import { ref, runTransaction, serverTimestamp } from "firebase/database";
+
     export let game, user;
 
-    // TODO: Add start game functionality
+    async function start() {
+        try {
+            await runTransaction(ref(db, 'games/' + game.accessCode), (data) => {
+                return {
+                    ...data,
+                    blackCard: cards.blackCards[Math.floor(Math.random() * cards.blackCards.length)],
+                    czar: Object.keys(game.players)[0],
+                    state: {
+                        value: 'ANSWER',
+                        timestamp: serverTimestamp()
+                    }
+                }
+            });
+        } catch (e) {
+            console.error(e);
+            alert('Error starting game');
+        }
+    }
 </script>
 <div class="w-full max-w-sm">
     <div class="flex flex-col items-center my-3">
@@ -20,7 +41,10 @@
             <div class="card-actions justify-center">
                 {#if Object.keys(game.players).length > 2}
                     {#if user.uid === game.admin}
-                    <button class="btn btn-primary btn-lg text-white shadow-lg">
+                    <button
+                        class="btn btn-primary btn-lg text-white shadow-lg"
+                        on:click={start}
+                    >
                         Start Game
                     </button>
                     {:else}

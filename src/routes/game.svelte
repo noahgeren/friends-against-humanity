@@ -34,7 +34,13 @@
 <div class="flex flex-col items-center">
     {#if !game}
     <Loading />
-    {:else}
+    {:else if game.state.value === 'LOBBY'}
     <Lobby {game} {user} />
+    {:else if game.state.value === 'ANSWER'}
+    <SelectCard />
+    {:else if game.state.value === 'VOTE'}
+    <SelectCard />
+    {:else if game.state.value === 'RANKINGS'}
+    <Rankings />
     {/if}
 </div>

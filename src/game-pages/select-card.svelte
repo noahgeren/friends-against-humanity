@@ -9,7 +9,6 @@
 
     $: isAdmin = user.uid === game.admin;
     $: isCzar = user.uid === game.czar;
-    // TODO: Change below to be all players but one have selected to account for czar
     $: isAnswer = game.state === 'ANSWER' && Object.entries(game.players).some(([uid, player]) => !player.selected && game.czar !== uid);
     
 
@@ -69,8 +68,26 @@
 
     async function submitVote() {
         try {
-            await runTransaction(ref('games/' + game.accessCode), (oldData) => {
-                // TODO: Update winner, state, winner score, black card, czar, and selected cards
+            await runTransaction(ref(db, 'games/' + game.accessCode), (data) => {
+                // Increment winner's points
+                data.players[players[selected].uid].points++;
+                // Select the winner
+                data.winner = {
+                    ...data.players[players[selected].uid],
+                    blackCard: data.blackCard
+                };
+                // Switch to rankings page
+                data.state = 'RANKINGS';
+                // Draw new black card
+                data.blackCard = cards.blackCards[Math.floor(Math.random() * cards.blackCards.length)];
+                // Select next czar
+                const playerUids = Object.keys(data.players);
+                data.czar = playerUids[(playerUids.indexOf(data.czar) + 1) % playerUids.length];
+                // Reset players' selected cards
+                playerUids.forEach((uid) => {
+                    delete data.players[uid].selected;
+                });
+                return data;
             });
         } catch (e) {
             console.error(e);

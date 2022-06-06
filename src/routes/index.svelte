@@ -39,6 +39,7 @@
             });
             localStorage.setItem('accessCode', accessCode);
             localStorage.setItem('nickname', nickname);
+            localStorage.removeItem('cards');
             goto(`/game/?code=${accessCode}`);
         } catch (e) {
             console.error(e);

@@ -21,8 +21,11 @@
         }
     }
 </script>
+{#if game.admin === user.uid}
+<h3 class="text-2xl text-center font-semibold">Join at friends-against-humanity.web.app</h3>
+{/if}
 <div class="w-full max-w-sm">
-    <div class="flex flex-col items-center my-3">
+    <div class="flex flex-col items-center my-3 text-center">
         <h3 class="text-2xl">Access Code:</h3>
         <h1 class="text-8xl font-semibold">{game.accessCode}</h1>
     </div>

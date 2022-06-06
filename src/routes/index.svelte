@@ -13,7 +13,7 @@
     });
 
     async function join() {
-        const gameSnapshot = await get(ref(db, 'games/' + accessCode.toUpperCase()));
+        const gameSnapshot = await get(ref(db, 'games/' + accessCode.trim().toUpperCase()));
         if(!gameSnapshot.exists()) {
             alert('No game exists with that access code');
             return;
@@ -28,12 +28,12 @@
                 alert('That nickname is already taken');
                 return;
             }
-            goto(`/game/?code=${accessCode}`);
+            goto(`/game/?code=${accessCode.trim()}`);
             return;
         }
 
         try {
-            await set(ref(db, `games/${accessCode.toUpperCase()}/players/${user.uid}`), {
+            await set(ref(db, `games/${accessCode.trim().toUpperCase()}/players/${user.uid}`), {
                 nickname,
                 points: 0
             });

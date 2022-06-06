@@ -33,9 +33,8 @@
         if(isAnswer) {
             showingCards = JSON.parse(localStorage.getItem('cards') || '[]');
             while(showingCards.length < 7) {
-                const newCard = cards.whiteCards[Math.floor(Math.random() * cards.whiteCards.length)];
-                if(seenWhiteCards.has(newCard) || showingCards.includes(newCard)) continue;
-                showingCards.push(newCard);
+                let availableWhiteCards = cards.whiteCards.filter((whiteCard) => !seenWhiteCards.has(whiteCard) && !showingCards.includes(whiteCard));
+                showingCards.push(availableWhiteCards[Math.floor(Math.random() * availableWhiteCards.length)]);
             }
             localStorage.setItem('cards', JSON.stringify(showingCards));
         } else {
@@ -85,11 +84,8 @@
                 // Switch to rankings page
                 data.state = 'RANKINGS';
                 // Draw new black card
-                let newBlackCard = cards.blackCards[Math.floor(Math.random() * cards.blackCards.length)];
-                while(seenBlackCards.has(newBlackCard)) {
-                    newBlackCard = cards.blackCards[Math.floor(Math.random() * cards.blackCards.length)];
-                }
-                data.blackCard = newBlackCard;
+                let availableBlackCards = cards.blackCards.filter((blackCard) => !seenBlackCards.has(blackCard));
+                data.blackCard = availableBlackCards[Math.floor(Math.random() * availableBlackCards.length)];
                 // Select next czar
                 const playerUids = Object.keys(data.players);
                 data.czar = playerUids[(playerUids.indexOf(data.czar) + 1) % playerUids.length];

@@ -3,6 +3,7 @@
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
     import { auth, db } from '$lib/firebase';
+    import { cards } from '$lib/cards';
     import { signInAnonymously } from 'firebase/auth';
     import { onValue, ref } from 'firebase/database';
     import SelectCard from '../game-pages/select-card.svelte';
@@ -19,6 +20,12 @@
             Object.values(game.players || {}).forEach((player) => {
                 seenWhiteCards.add(player.selected);
             });
+            if(seenBlackCards.size >= cards.blackCards.length) {
+                seenBlackCards = new Set();
+            }
+            if(seenWhiteCards.size >= cards.whiteCards.length) {
+                seenWhiteCards = new Set();
+            }
             localStorage.setItem('seenWhiteCards', JSON.stringify(Array.from(seenWhiteCards)));
             localStorage.setItem('seenBlackCards', JSON.stringify(Array.from(seenBlackCards)));
         }

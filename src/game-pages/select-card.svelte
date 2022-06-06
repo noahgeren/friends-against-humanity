@@ -138,7 +138,11 @@
                         <div class="card-title text-4xl">{@html card}</div>
                     </div>
                 </div>
-                <div class="card-body pt-3 invisible pb-3" class:h-card={idx === showingCards.length - 1}>
+                <div
+                    class="card-body pt-3 invisible pb-3"
+                    class:h-card={idx === showingCards.length - 1}
+                    style="margin-left: 2px;"
+                >
                     <div class="card-title text-4xl">{@html card}</div>
                 </div>
             </div>

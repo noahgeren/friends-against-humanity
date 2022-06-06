@@ -12,14 +12,16 @@
 
     let code, user, game;
 
-    let seenWhiteCards = new Set(JSON.parse(localStorage.getItem('seenWhiteCards') || '[]')), seenBlackCards = new Set(JSON.parse(localStorage.getItem('seenBlackCards') || '[]'));
+    let seenWhiteCards = new Set(), seenBlackCards = new Set();
     $: {
-        seenBlackCards.add(game.blackCard);
-        Object.values(game.players || {}).forEach((player) => {
-            seenWhiteCards.add(player.selected);
-        });
-        localStorage.setItem('seenWhiteCards', JSON.stringify(seenWhiteCards));
-        localStorage.setItem('seenBlackCards', JSON.stringify(seenBlackCards));
+        if(game) {
+            seenBlackCards.add(game.blackCard);
+            Object.values(game.players || {}).forEach((player) => {
+                seenWhiteCards.add(player.selected);
+            });
+            localStorage.setItem('seenWhiteCards', JSON.stringify(Array.from(seenWhiteCards)));
+            localStorage.setItem('seenBlackCards', JSON.stringify(Array.from(seenBlackCards)));
+        }
     };
     onMount(async () => {
         code = $page.url.searchParams.get('code');
@@ -38,6 +40,7 @@
                 accessCode: snapshot.key
             };
         });
+        seenWhiteCards = new Set(JSON.parse(localStorage.getItem('seenWhiteCards') || '[]')), seenBlackCards = new Set(JSON.parse(localStorage.getItem('seenBlackCards') || '[]'));
     });
 
 </script>

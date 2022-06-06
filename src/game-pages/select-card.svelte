@@ -9,7 +9,7 @@
     $: isAdmin = user.uid === game.admin;
     $: isCzar = user.uid === game.czar;
     $: isAnswer = game.state === 'ANSWER' && Object.entries(game.players).some(([uid, player]) => !player.selected && game.czar !== uid);
-    $: submitted = !!game.players[user.uid].selected;
+    $: submitted = !!game.players[user.uid]?.selected;
 
     let players = [];
     let showingCards = [];

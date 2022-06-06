@@ -4,7 +4,7 @@
     import { ref, set, runTransaction } from 'firebase/database';
     import Loading from './loading.svelte';
 
-    export let game, user;
+    export let game, user, seenWhiteCards, seenBlackCards;
 
     $: isAdmin = user.uid === game.admin;
     $: isCzar = user.uid === game.czar;
@@ -30,7 +30,9 @@
         if(isAnswer) {
             showingCards = JSON.parse(localStorage.getItem('cards') || '[]');
             while(showingCards.length < 7) {
-                showingCards.push(cards.whiteCards[Math.floor(Math.random() * cards.whiteCards.length)]);
+                const newCard = cards.whiteCards[Math.floor(Math.random() * cards.whiteCards.length)];
+                if(seenWhiteCards.has(newCard) || showingCards.includes(newCard)) continue;
+                showingCards.push(newCard);
             }
             localStorage.setItem('cards', JSON.stringify(showingCards));
         } else {
@@ -73,7 +75,11 @@
                 // Switch to rankings page
                 data.state = 'RANKINGS';
                 // Draw new black card
-                data.blackCard = cards.blackCards[Math.floor(Math.random() * cards.blackCards.length)];
+                let newBlackCard = cards.blackCards[Math.floor(Math.random() * cards.blackCards.length)];
+                while(seenBlackCards.has(newBlackCard)) {
+                    newBlackCard = cards.blackCards[Math.floor(Math.random() * cards.blackCards.length)];
+                }
+                data.blackCard = newBlackCard;
                 // Select next czar
                 const playerUids = Object.keys(data.players);
                 data.czar = playerUids[(playerUids.indexOf(data.czar) + 1) % playerUids.length];

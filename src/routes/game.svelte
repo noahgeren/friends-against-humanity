@@ -11,6 +11,16 @@
     import Loading from '../game-pages/loading.svelte';
 
     let code, user, game;
+
+    let seenWhiteCards = new Set(JSON.parse(localStorage.getItem('seenWhiteCards') || '[]')), seenBlackCards = new Set(JSON.parse(localStorage.getItem('seenBlackCards') || '[]'));
+    $: {
+        seenBlackCards.add(game.blackCard);
+        Object.values(game.players || {}).forEach((player) => {
+            seenWhiteCards.add(player.selected);
+        });
+        localStorage.setItem('seenWhiteCards', JSON.stringify(seenWhiteCards));
+        localStorage.setItem('seenBlackCards', JSON.stringify(seenBlackCards));
+    };
     onMount(async () => {
         code = $page.url.searchParams.get('code');
         if(!code) {
@@ -37,7 +47,7 @@
     {:else if game.state === 'LOBBY'}
     <Lobby {game} {user} />
     {:else if game.state === 'ANSWER'}
-    <SelectCard {game} {user} />
+    <SelectCard {game} {user} {seenWhiteCards} {seenBlackCards} />
     {:else if game.state === 'RANKINGS'}
     <Rankings {game} {user} />
     {/if}

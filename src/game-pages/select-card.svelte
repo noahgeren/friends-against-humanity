@@ -1,5 +1,4 @@
 <script>
-    import { onMount } from 'svelte';
     import { cards } from '$lib/cards';
     import { db } from '$lib/firebase';
     import { ref, set, runTransaction } from 'firebase/database';
@@ -10,12 +9,11 @@
     $: isAdmin = user.uid === game.admin;
     $: isCzar = user.uid === game.czar;
     $: isAnswer = game.state === 'ANSWER' && Object.entries(game.players).some(([uid, player]) => !player.selected && game.czar !== uid);
-    
+    $: submitted = !!game.players[user.uid].selected;
 
     let players = [];
     let showingCards = [];
     let selected;
-    let submitted = false;
 
     /* Randomize array in-place using Durstenfeld shuffle algorithm */
     function shuffle(array) {
@@ -58,7 +56,6 @@
             let cards = JSON.parse(localStorage.getItem('cards') || '[]');
             cards.splice(selected, 1);
             localStorage.setItem('cards', JSON.stringify(cards));
-            submitted = true;
             selected = undefined;
         } catch (e) {
             console.error(e);

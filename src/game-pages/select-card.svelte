@@ -44,21 +44,28 @@
         }
     };
 
-    function submit() {
+    function writeAnswer() {
+        const answer = prompt('Write your own answer:');
+        if(answer) {
+            submitAnswer(answer);
+        }
+    }
+
+    async function submit() {
         if(isAnswer) {
-            submitAnswer();
+            await submitAnswer(showingCards[selected]);
+            let cards = JSON.parse(localStorage.getItem('cards') || '[]');
+            cards.splice(selected, 1);
+            localStorage.setItem('cards', JSON.stringify(cards));
+            selected = undefined;
         } else {
             submitVote();
         }
     }
 
-    async function submitAnswer() {
+    async function submitAnswer(answer) {
         try {
-            await set(ref(db, `games/${game.accessCode}/players/${user.uid}/selected`), showingCards[selected]);
-            let cards = JSON.parse(localStorage.getItem('cards') || '[]');
-            cards.splice(selected, 1);
-            localStorage.setItem('cards', JSON.stringify(cards));
-            selected = undefined;
+            await set(ref(db, `games/${game.accessCode}/players/${user.uid}/selected`), answer);
         } catch (e) {
             console.error(e);
             alert('Error submitting answer')
@@ -126,12 +133,11 @@
             </div>
             {/each}
         </div>
-        <!-- TODO: Add logic to write your own answers 
         {#if isAnswer}
         <div>
-            <button class="btn btn-lg btn-link">Write your own answer<br/>(3 left)</button>
+            <button class="btn btn-lg btn-link" on:click={writeAnswer}>Write your own answer</button>
         </div>
-        {/if} -->
+        {/if}
         {#if selected !== undefined}
             <div class="fixed bottom-4 w-full flex justify-center pointer-events-none">
                 <button

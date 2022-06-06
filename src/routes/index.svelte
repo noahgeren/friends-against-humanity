@@ -55,6 +55,9 @@
         <input
             placeholder="Access Code"
             class="input input-lg text-white w-full"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="off"
             bind:value={accessCode}
             required
         />

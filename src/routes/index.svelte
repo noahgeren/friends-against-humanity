@@ -5,7 +5,7 @@
     import { get, set, ref } from 'firebase/database';
     import { signInAnonymously } from 'firebase/auth';
 
-    let accessCode = '', nickname = '';
+    let accessCode = '', nickname = '', loading = false;
 
     onMount(() => {
         accessCode = localStorage.getItem('accessCode') || '';
@@ -13,9 +13,11 @@
     });
 
     async function join() {
+        loading = true;
         const gameSnapshot = await get(ref(db, 'games/' + accessCode.trim().toUpperCase()));
         if(!gameSnapshot.exists()) {
             alert('No game exists with that access code');
+            loading = false;
             return;
         }
         const game = gameSnapshot.val();
@@ -26,9 +28,11 @@
         if(matchingPlayers.length > 0) {
             if(matchingPlayers[0][0] !== user.uid) {
                 alert('That nickname is already taken');
+                loading = false;
                 return;
             }
             goto(`/game/?code=${accessCode.trim()}`);
+            loading = false;
             return;
         }
 
@@ -45,6 +49,7 @@
             console.error(e);
             alert('Error joining game');
         }
+        loading = false;
     }
 
 </script>
@@ -69,7 +74,12 @@
             required
             />
         <div class="flex justify-center mt-3">
-            <button type="submit" class="btn btn-lg btn-primary text-white shadow">Join Game</button>
+            <button
+                type="submit"
+                class="btn btn-lg btn-primary text-white shadow"
+                class:loading
+                disabled={loading}
+            >Join Game</button>
         </div>
     </form>
 </div>

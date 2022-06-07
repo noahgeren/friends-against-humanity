@@ -44,6 +44,8 @@
             localStorage.setItem('accessCode', accessCode);
             localStorage.setItem('nickname', nickname);
             localStorage.removeItem('cards');
+            localStorage.removeItem('seenWhiteCards');
+            localStorage.removeItem('seenBlackCards');
             goto(`/game/?code=${accessCode}`);
         } catch (e) {
             console.error(e);

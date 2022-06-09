@@ -32,7 +32,7 @@
     <div class="fah-card mx-auto">
         <div class="card-body">
             <h3 class="card-title text-5xl mb-3">Lobby</h3>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {#each Object.values(game.players || {}) as player}
                 <p class="text-2xl">{player.nickname}</p>
                 {/each}

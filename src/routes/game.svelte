@@ -38,12 +38,15 @@
         }
         user = (await signInAnonymously(auth)).user;
         onValue(ref(db, 'games/' + code.toUpperCase()), (snapshot) => {
-            if(!snapshot.exists()) {
+            const val = snapshot.val();
+            if(!snapshot.exists() ||
+                (val.players && user.uid !== val.admin &&
+                    !Object.keys(val.players).some((uid) => user.uid === uid))) {
                 window.location.href = '/';
                 return;
             }
             game = {
-                ...snapshot.val(),
+                ...val,
                 accessCode: snapshot.key
             };
         });

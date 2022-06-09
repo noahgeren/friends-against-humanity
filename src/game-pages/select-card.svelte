@@ -102,6 +102,28 @@
             alert('Error submitting vote');
         }
     }
+
+    async function skip() {
+        if(!confirm('Already selected white cards will be forfeited. Are you sure you want to continue?')) {
+            return;
+        }
+        try {
+            await runTransaction(ref(db, 'games/' + game.accessCode), (data) => {
+                // Draw new black card
+                let availableBlackCards = cards.blackCards.filter((blackCard) => !seenBlackCards.has(blackCard));
+                data.blackCard = availableBlackCards[Math.floor(Math.random() * availableBlackCards.length)];
+                // Reset players' selected cards
+                const playerUids = Object.keys(data.players);
+                playerUids.forEach((uid) => {
+                    delete data.players[uid].selected;
+                });
+                return data;
+            });
+        } catch (e) {
+            console.error(e);
+            alert('Error skipping black card');
+        }
+    }
 </script>
 {#if !submitted || !isAnswer}
     <h1 class="text-5xl font-semibold block w-full max-w-md mx-3 mb-6 text-center">
@@ -117,8 +139,8 @@
         <h2 class="text-4xl text-center w-1/3">{player}</h2>
         {/each}
     </div>
+    <button class="btn btn-link mt-8" on:click={skip}>Skip Black Card</button>
     {/if}
-    <!-- TODO: Add skip card button -->
     {#if !((isAdmin || isCzar) && isAnswer)}
         <div
             class="flex flex-row flex-wrap gap-3 justify-center w-full"

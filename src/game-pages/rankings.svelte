@@ -17,6 +17,7 @@
             rankings[i].place = getNumberWithOrdinal(place);
         }
     };
+    $: isPlayer = !!localStorage.getItem('cards');
     
     function getPlace() {
         return rankings.find((player) => player.uid === user.uid).place;
@@ -42,7 +43,7 @@
 <div class="fah-card mx-auto">
     <div class="card-body">
         <h3 class="text-5xl text-center font-semibold mb-3">Rankings</h3>
-        {#if game.admin !== user.uid}
+        {#if isPlayer}
         <h4 class="text-2xl text-center">You are in {@html getPlace()} place</h4>
         {/if}
         <table class="text-xl">

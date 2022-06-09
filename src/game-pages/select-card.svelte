@@ -8,6 +8,7 @@
 
     $: isAdmin = user.uid === game.admin;
     $: isCzar = user.uid === game.czar;
+    $: isPlayer = !!localStorage.getItem('cards');
     $: isAnswer = game.state === 'ANSWER' && Object.entries(game.players).some(([uid, player]) => !player.selected && game.czar !== uid);
     $: submitted = !!game.players[user.uid]?.selected;
     $: waitingOn = Object.entries(game.players)
@@ -131,15 +132,17 @@
         {#if isCzar}You are{:else}{game.players[game.czar].nickname} is{/if} the card czar this round
     </h2>
     {#if isAdmin && isAnswer}
-    <h2 class="text-4xl text-center my-3 underline">Waiting On</h2>
-    <div class="flex flex-wrap justify-center w-full max-w-3xl">
-        {#each waitingOn as player}
-        <h2 class="text-4xl text-center w-1/3">{player}</h2>
-        {/each}
-    </div>
+        {#if !isPlayer}
+        <h2 class="text-4xl text-center my-3 underline">Waiting On</h2>
+        <div class="flex flex-wrap justify-center w-full max-w-3xl">
+            {#each waitingOn as player}
+            <h2 class="text-4xl text-center w-1/3">{player}</h2>
+            {/each}
+        </div>
+        {/if}
     <button class="btn btn-link mt-8" on:click={skip}>Skip Black Card</button>
     {/if}
-    {#if !((isAdmin || isCzar) && isAnswer)}
+    {#if !((isAdmin && !isPlayer || isCzar) && isAnswer)}
         <div
             class="flex flex-row flex-wrap gap-3 justify-center w-full"
             class:pointer-events-none={!isAnswer && !isCzar}

@@ -13,7 +13,11 @@
         for (let i = 0; i < 5; i++) {
             accessCode += charSet.charAt(Math.floor(Math.random() * charSet.length));
         }
+        // TODO: Remove below
+        accessCode = 'NOAH';
+        let user = await new Promise((resolve) => {
 
+        });
         let user = (await signInAnonymously(auth)).user;
 
         try {
@@ -21,6 +25,9 @@
                 admin: user.uid,
                 state: 'LOBBY'
             });
+            localStorage.removeItem('cards');
+            localStorage.removeItem('seenWhiteCards');
+            localStorage.removeItem('seenBlackCards');
             goto(`/game/?code=${accessCode}`);
         } catch (e) {
             console.error(e);

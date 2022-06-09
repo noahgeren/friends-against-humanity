@@ -3,13 +3,18 @@
     import { goto } from '$app/navigation';
     import { auth, db } from '$lib/firebase';
     import { get, set, ref } from 'firebase/database';
-    import { signInAnonymously } from 'firebase/auth';
+    import { signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 
-    let accessCode = '', nickname = '', loading = false;
+    let accessCode = '', nickname = '', loading = false, user;
 
     onMount(() => {
         accessCode = localStorage.getItem('accessCode') || '';
         nickname = localStorage.getItem('nickname') || '';
+        
+        onAuthStateChanged(auth, (newUser) => {
+            user = newUser;
+            console.log(user)
+        })
     });
 
     async function join() {
@@ -82,6 +87,11 @@
                 class:loading
                 disabled={loading}
             >Join Game</button>
+            {#if user?.email}
+            <a href="/start/" class="btn btn-lg btn-link">
+                Start Game
+            </a>
+            {/if}
         </div>
     </form>
 </div>

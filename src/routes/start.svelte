@@ -2,32 +2,48 @@
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
     import { auth, db } from "$lib/firebase";
-    import { signInAnonymously } from "firebase/auth";
-    import { ref, set } from "firebase/database";
+    import { onAuthStateChanged } from "firebase/auth";
+    import { ref, set, get } from "firebase/database";
     import Loading from "../game-pages/loading.svelte";
     
     const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     onMount(async () => {
-        let accessCode = '';
-        for (let i = 0; i < 5; i++) {
-            accessCode += charSet.charAt(Math.floor(Math.random() * charSet.length));
+        let user;
+        try {
+            user = await new Promise((resolve, reject) => {
+                const unsubscribe = onAuthStateChanged(auth, async (user) => {
+                    unsubscribe();
+                    if(user && user.email) {
+                        resolve(user);
+                    } else {
+                        reject();
+                    }
+                });
+            });
+        } catch (e) {
+            goto('/');
+            return;
         }
-        // TODO: Remove below
-        accessCode = 'NOAH';
-        let user = await new Promise((resolve) => {
 
-        });
-        let user = (await signInAnonymously(auth)).user;
+        // let accessCode = '';
+        // for (let i = 0; i < 5; i++) {
+        //     accessCode += charSet.charAt(Math.floor(Math.random() * charSet.length));
+        // }
+        let accessCode = (await get(ref(db, 'accessCodes/' + user.uid))).val();
 
+        if(!accessCode) {
+            goto('/');
+            return;
+        }
+            
         try {
             await set(ref(db, 'games/' + accessCode), {
                 admin: user.uid,
-                state: 'LOBBY'
+                state: 'LOBBY',
             });
-            localStorage.removeItem('cards');
-            localStorage.removeItem('seenWhiteCards');
-            localStorage.removeItem('seenBlackCards');
+            localStorage.clear();
+            localStorage.setItem('startedGame', 'true');
             goto(`/game/?code=${accessCode}`);
         } catch (e) {
             console.error(e);

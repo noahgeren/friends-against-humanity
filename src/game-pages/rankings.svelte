@@ -17,7 +17,7 @@
             rankings[i].place = getNumberWithOrdinal(place);
         }
     };
-    $: isPlayer = !!localStorage.getItem('cards');
+    let isPlayer = !localStorage.getItem('startedGame');
     
     function getPlace() {
         return rankings.find((player) => player.uid === user.uid).place;

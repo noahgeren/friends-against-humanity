@@ -1,20 +1,25 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import { goto } from '$app/navigation';
     import { auth, db } from '$lib/firebase';
     import { get, set, ref } from 'firebase/database';
-    import { signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+    import { signInAnonymously, onAuthStateChanged, signOut } from 'firebase/auth';
 
     let accessCode = '', nickname = '', loading = false, user;
+
+    let unsubscribe;
 
     onMount(() => {
         accessCode = localStorage.getItem('accessCode') || '';
         nickname = localStorage.getItem('nickname') || '';
         
-        onAuthStateChanged(auth, (newUser) => {
+        unsubscribe = onAuthStateChanged(auth, (newUser) => {
             user = newUser;
-            console.log(user)
         })
+    });
+
+    onDestroy(() => {
+        unsubscribe && unsubscribe();
     });
 
     async function join() {
@@ -26,7 +31,9 @@
             return;
         }
         const game = gameSnapshot.val();
-        const user = (await signInAnonymously(auth)).user;
+        if(!user) {
+            user = (await signInAnonymously(auth)).user;
+        }
 
         const matchingPlayers = Object.entries(game.players || {}).filter(entry => entry[1].nickname.toUpperCase() === nickname.toUpperCase());
 
@@ -46,11 +53,9 @@
                 nickname,
                 points: 0
             });
+            localStorage.clear();
             localStorage.setItem('accessCode', accessCode);
             localStorage.setItem('nickname', nickname);
-            localStorage.removeItem('cards');
-            localStorage.removeItem('seenWhiteCards');
-            localStorage.removeItem('seenBlackCards');
             goto(`/game/?code=${accessCode}`);
         } catch (e) {
             console.error(e);
@@ -59,8 +64,18 @@
         loading = false;
     }
 
+    function logout() {
+        signOut(auth);
+    }
 </script>
-<div class="fah-card mx-auto mt-3">
+<div class="flex justify-end">
+    {#if !user?.email}
+    <a href='/login/' class="btn btn-link">Login</a>
+    {:else}
+    <button class="btn btn-link" on:click={logout}>Logout</button>
+    {/if}
+</div>
+<div class="fah-card mx-auto">
     <form on:submit|preventDefault={join} class="card-body">
         <h1 class="card-title text-6xl">Friends<br/>Against<br/>Humanity</h1>
         <div class="my-2 text-xl">An online clone of Cards Against Humanity</div>

@@ -17,7 +17,7 @@
 </script>
 <div class="fah-card mx-auto mt-3">
     <form on:submit|preventDefault={login} class="card-body">
-        <h1 class="card-title text-6xl mb-5">Friends<br/>Against<br/>Humanity</h1>
+        <a href="/" class="card-title text-6xl mb-5">Friends<br/>Against<br/>Humanity</a>
         {#if error}
         <div class="alert alert-error shadow-lg text-white">
         Incorrect username and/or password.

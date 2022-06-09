@@ -1,17 +1,17 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
     import { auth, db } from '$lib/firebase';
     import { cards } from '$lib/cards';
-    import { signInAnonymously } from 'firebase/auth';
+    import { signInAnonymously, onAuthStateChanged } from 'firebase/auth';
     import { onValue, ref } from 'firebase/database';
     import SelectCard from '../game-pages/select-card.svelte';
     import Lobby from '../game-pages/lobby.svelte';
     import Rankings from '../game-pages/rankings.svelte';
     import Loading from '../game-pages/loading.svelte';
 
-    let code, user, game;
+    let code, user, game, unsubscribe;
 
     let seenWhiteCards = new Set(), seenBlackCards = new Set();
     $: {
@@ -36,21 +36,32 @@
             goto('/');
             return;
         }
-        user = (await signInAnonymously(auth)).user;
-        onValue(ref(db, 'games/' + code.toUpperCase()), (snapshot) => {
-            const val = snapshot.val();
+        user = await new Promise((resolve) => {
+            const unsubscribe = onAuthStateChanged(auth, async (user) => {
+                unsubscribe();
+                if(user) {
+                    resolve(user);
+                } else {
+                    resolve((await signInAnonymously(auth)).user);
+                }
+            });
+        });
+        unsubscribe = onValue(ref(db, 'games/' + code.toUpperCase()), (snapshot) => {
+            game = {
+                ...snapshot.val(),
+                accessCode: snapshot.key
+            };
             if(!snapshot.exists() ||
-                (val.players && user.uid !== val.admin &&
-                    !Object.keys(val.players).some((uid) => user.uid === uid))) {
+                (game.players && user.uid !== game.admin &&
+                    !Object.keys(game.players).some((uid) => user.uid === uid))) {
                 window.location.href = '/';
                 return;
             }
-            game = {
-                ...val,
-                accessCode: snapshot.key
-            };
         });
         seenWhiteCards = new Set(JSON.parse(localStorage.getItem('seenWhiteCards') || '[]')), seenBlackCards = new Set(JSON.parse(localStorage.getItem('seenBlackCards') || '[]'));
+    });
+    onDestroy(() => {
+        unsubscribe && unsubscribe();
     });
 
 </script>

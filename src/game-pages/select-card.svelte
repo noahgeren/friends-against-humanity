@@ -8,7 +8,6 @@
 
     $: isAdmin = user.uid === game.admin;
     $: isCzar = user.uid === game.czar;
-    $: isPlayer = !!localStorage.getItem('cards');
     $: isAnswer = game.state === 'ANSWER' && Object.entries(game.players).some(([uid, player]) => !player.selected && game.czar !== uid);
     $: submitted = !!game.players[user.uid]?.selected;
     $: waitingOn = Object.entries(game.players)
@@ -18,6 +17,7 @@
     let players = [];
     let showingCards = [];
     let selected;
+    let isPlayer = !localStorage.getItem('startedGame');
 
     /* Randomize array in-place using Durstenfeld shuffle algorithm */
     function shuffle(array) {
@@ -129,18 +129,15 @@
         {@html game.blackCard.replace('_', '_____')}
     </h1>
     <h2 class="text-4xl font-semibold text-center my-3">
-        {#if isCzar}You are{:else}{game.players[game.czar].nickname} is{/if} the card czar this round
+        {#if isCzar && isPlayer}You are{:else}{game.players[game.czar].nickname} is{/if} the card czar this round
     </h2>
-    {#if isAdmin && isAnswer}
-        {#if !isPlayer}
-        <h2 class="text-4xl text-center my-3 underline">Waiting On</h2>
-        <div class="flex flex-wrap justify-center w-full max-w-3xl">
-            {#each waitingOn as player}
-            <h2 class="text-4xl text-center w-1/3">{player}</h2>
-            {/each}
-        </div>
-        {/if}
-    <button class="btn btn-link mt-8" on:click={skip}>Skip Black Card</button>
+    {#if isAdmin && isAnswer && !isPlayer}
+    <h2 class="text-4xl text-center my-3 underline">Waiting On</h2>
+    <div class="flex flex-wrap justify-center w-full max-w-3xl">
+        {#each waitingOn as player}
+        <h2 class="text-4xl text-center w-1/3">{player}</h2>
+        {/each}
+    </div>
     {/if}
     {#if !((isAdmin && !isPlayer || isCzar) && isAnswer)}
         <div
@@ -184,6 +181,9 @@
                 </button>
             </div>
         {/if}
+    {/if}
+    {#if isAdmin && isAnswer}
+    <button class="btn btn-link mt-8" on:click={skip}>Skip Black Card</button>
     {/if}
 {:else}
     <Loading msg="Waiting on all players to answer" />

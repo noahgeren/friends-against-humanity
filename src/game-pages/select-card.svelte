@@ -86,6 +86,8 @@
                 // Draw new black card
                 let availableBlackCards = cards.blackCards.filter((blackCard) => !seenBlackCards.has(blackCard));
                 data.blackCard = availableBlackCards[Math.floor(Math.random() * availableBlackCards.length)];
+                // Set last czar
+                data.lastCzar =  data.czar;
                 // Select next czar
                 const playerUids = Object.keys(data.players);
                 data.czar = playerUids[(playerUids.indexOf(data.czar) + 1) % playerUids.length];

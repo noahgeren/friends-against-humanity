@@ -54,7 +54,7 @@
         </tr>
         {/each}
         </table>
-        {#if game.admin === user.uid}
+        {#if game.admin === user.uid || game.lastCzar === user.uid}
         <div class="text-center mt-3">
             <button class="btn btn-primary btn-lg text-white shadow" on:click={next}>
                 Next Card

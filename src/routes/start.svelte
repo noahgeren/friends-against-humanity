@@ -6,9 +6,10 @@
     import { ref, set, get } from "firebase/database";
     import Loading from "../game-pages/loading.svelte";
     
-    const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    // const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     onMount(async () => {
+        localStorage.clear();
         let user;
         try {
             user = await new Promise((resolve, reject) => {
@@ -36,14 +37,24 @@
             goto('/');
             return;
         }
-            
+
+        const isPlayer = confirm('Do you also want to play from this device?');
         try {
-            await set(ref(db, 'games/' + accessCode), {
+            const game = {
                 admin: user.uid,
                 state: 'LOBBY',
-            });
-            localStorage.clear();
-            localStorage.setItem('startedGame', 'true');
+            };
+            if(isPlayer) {
+                game.players = {};
+                game.players[user.uid] = {
+                    nickname: prompt('Please enter the nickname you want to use:'),
+                    points: 0
+                };
+            } else {
+                localStorage.setItem('startedGame', 'true');
+            }
+            await set(ref(db, 'games/' + accessCode), game);
+            
             goto(`/game/?code=${accessCode}`);
         } catch (e) {
             console.error(e);

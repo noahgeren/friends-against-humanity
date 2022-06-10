@@ -1,8 +1,18 @@
 <script>
+    import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
     import { auth } from '$lib/firebase';
-    import { signInWithEmailAndPassword } from 'firebase/auth';
+    import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
     let email, password, loading = false, error = false;
+
+    onMount(() => {
+        let unsubscribe = onAuthStateChanged(auth, (user) => {
+            unsubscribe();
+            if(user.email) {
+                goto('/');
+            }
+        });
+    });
 
     async function login() {
         loading = true;
@@ -15,9 +25,13 @@
         loading = false;
     }
 </script>
-<div class="fah-card mx-auto mt-3">
+<div class="flex justify-end">
+    <a href='/' class="btn btn-link">Home</a>
+</div>
+<div class="fah-card mx-auto">
     <form on:submit|preventDefault={login} class="card-body">
-        <a href="/" class="card-title text-6xl mb-5">Friends<br/>Against<br/>Humanity</a>
+        <h1 class="card-title text-6xl">Friends<br/>Against<br/>Humanity</h1>
+        <div class="my-2 text-xl">An online clone of Cards Against Humanity</div>
         {#if error}
         <div class="alert alert-error shadow-lg text-white">
         Incorrect username and/or password.

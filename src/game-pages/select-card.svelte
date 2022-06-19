@@ -6,18 +6,18 @@
 
     export let game, user, seenWhiteCards, seenBlackCards;
 
-    $: isAdmin = user.uid === game.admin;
-    $: isCzar = user.uid === game.czar;
-    $: isAnswer = game.state === 'ANSWER' && Object.entries(game.players).some(([uid, player]) => !player.selected && game.czar !== uid);
-    $: submitted = !!game.players[user.uid]?.selected;
-    $: waitingOn = Object.entries(game.players)
-                        .filter(([uid, player]) => uid !== game.czar && !player.selected)
-                        .map(([_, player]) => player.nickname);
-
     let players = [];
     let showingCards = [];
     let selected;
-    let isPlayer = !localStorage.getItem('startedGame');
+    let isPlayer = !!localStorage.getItem('nickname');
+
+    $: isAdmin = user.uid === game.admin;
+    $: isCzar = user.uid === game.czar;
+    $: isAnswer = game.state === 'ANSWER' && Object.entries(game.players).some(([uid, player]) => !player.selected && game.czar !== uid);
+    $: submitted = isPlayer && !!game.players[user.uid]?.selected;
+    $: waitingOn = Object.entries(game.players)
+                        .filter(([uid, player]) => uid !== game.czar && !player.selected)
+                        .map(([_, player]) => player.nickname);
 
     /* Randomize array in-place using Durstenfeld shuffle algorithm */
     function shuffle(array) {

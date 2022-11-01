@@ -1,2 +1,2 @@
-# friends-against-humanity
- Jamstack remake of Friends Against Humanity with SvelteKit, Firebase, and TailwindCSS
+# Friends Against Humanity
+ Jamstack remake of Cards Against Humanity with SvelteKit, Firebase, and TailwindCSS
